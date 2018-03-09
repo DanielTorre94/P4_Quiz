@@ -85,6 +85,7 @@ rl
   
 })
 .on('close', () => {
-  log(colorize('Hasta la próxima!', 'yellow'));
+  log(colorize('ADIOS!', 'green'));
+  log(colorize('Hasta la próxima!', 'green'));
   process.exit(0);
 })

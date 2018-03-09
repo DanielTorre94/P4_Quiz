@@ -159,8 +159,8 @@ const {log, biglog, errorlog, colorize} = require("./out");
 	 			 var goodAnswer = quiz.answer.toLowerCase().trim();				// cambiar de mayusculas a minusculas
 
 	 			 if (answerToCmp === goodAnswer){
-	 			 	log(`Su respuesta es: CORRECTA `);
-	 			 	++points;
+	 			  	++points;
+	 			 	log(`Su respuesta es: CORRECTA. Lleva ${points} `);
 	 			 	if(points < long){
 	 			 		toBeResolved.splice(randomId, 1);		// eliminar 1 elemento desde la posición randomId
 	 			 		rl.prompt();
@@ -169,10 +169,11 @@ const {log, biglog, errorlog, colorize} = require("./out");
 	 		 			log(' HAS ACERTADO TODAS LAS PREGUNTAS, ENHORABUENA!!');
 	 		 			rl.prompt();
 	 		 		}
+	 		 
 	 		 	} else {
 			 		log(`Su respuesta es: INCORRECTA`);
 	 			 	log(`Ha acertado: ${points} de ${long} preguntas`);
-	 			 	log('FIN DEL JUEGO', 'yellow');
+	 			 	log('FIN DEL JUEGO', 'red');
 	 			 	rl.prompt();
 	 			}
  			});
