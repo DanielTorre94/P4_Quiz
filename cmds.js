@@ -100,13 +100,11 @@ const {log, biglog, errorlog, colorize} = require("./out");
 
  				rl.question(`Introduce la respuesta: `, answer => {
  					// Respuesta del jugador
-	 			 var answerSimbol = answer.replace(/[^a-zA-Z 0-9.]+/g,' ');	// eliminar símbolos raros
-	 			 var answerSpace = answerSimbol.replace(/\s+/g,' ');   	// eliminar espacios
-	 			 var answerToCmp = answerSpace.toLowerCase().trim();			// cambio de mayusculas a minusculas
+	 			 var answerPlayer = answerSpace.toLowerCase().trim();			// cambiar de mayusculas a minusculas y quitar blancos
 
 	 			 	// Respuesta correcta del test
-	 			 var goodAnswer = quiz.answer.toLowerCase().trim();				// cambiar de mayusculas a minusculas
- 					if(answerToCmp === goodAnswer){
+	 			 var goodAnswer = quiz.answer.toLowerCase().trim();				// cambiar de mayusculas a minusculas y quitar blancos
+ 					if(answerPlayer === goodAnswer){
  						log('Su respuesta es CORRECTA');
  					} else {
  						log('Su respuesta es INCORRECTA');
@@ -151,14 +149,12 @@ const {log, biglog, errorlog, colorize} = require("./out");
  			log(`${quiz.question}? `);								//Se lanza la pregunta
  			rl.question('Introduce la respuesta: ', answer => {
 	 			 	// Respuesta del jugador
-	 			 var answerSimbol = answer.replace(/[^a-zA-Z 0-9.]+/g,' ');	// eliminar símbolos raros
-	 			 var answerSpace = answerSimbol.replace(/\s+/g,' ');   	// eliminar espacios
-	 			 var answerToCmp = answerSpace.toLowerCase().trim();			// cambio de mayusculas a minusculas
+	 			 var answerPlayer = answer.toLowerCase().trim();			// cambiar de mayusculas a minusculas y quitar blancos
 
 	 			 	// Respuesta correcta del test
-	 			 var goodAnswer = quiz.answer.toLowerCase().trim();				// cambiar de mayusculas a minusculas
+	 			 var goodAnswer = quiz.answer.toLowerCase().trim();				// cambiar de mayusculas a minusculas y quitar blancos
 
-	 			 if (answerToCmp === goodAnswer){
+	 			 if (answerPlayer === goodAnswer){
 	 			  	++points;
 	 			 	log(`Su respuesta es: CORRECTA. Lleva ${points} `);
 	 			 	if(points < long){
