@@ -180,58 +180,72 @@ const makeQuestion = (rl,text) => {
  * @param rl  Objeto readline usado para implementar el CLI.
  */
  exports.playCmd = rl => {
-
- 		if(model.count() == 0){
- 			log('No hay preguntas para jugar');
- 			rl.prompt();
- 			return;
- 		}
-
  		var points = 0;
- 		var toBeResolved = [];						// es un array para cada id
- 		toBeResolved.lenght = model.count();  		// inicio de array con el numero de preguntas que hay
- 		var long = toBeResolved.lenght;
+ 		var toBeResolved = [];						
+ 		var Questions = 0;
 
- 		for (var i=0; i<toBeResolved.lenght; i++){
- 			toBeResolved.push(i);					// introducir los indices en un array
+ 	models.quiz.findAll()
+ 	.each(quiz => {
+ 		++Questions;
+ 		toBeResolved.lenght = Questions;
+ 		toBeResolved.push(quiz.id);
+ 	})
+ 	.then(()=>{
+ 		if(Questions==0){
+ 			log('No quedan preguntas por contestar','red');
+ 		} else {
+ 			playOne();
  		}
+ 	})
+ 	.catch(error => {
+ 		errorlog(error.massage);
+ 	})
+ 	.then(() => {
+ 		rl.prompt();
+ 	});
 
  		const playOne = () => {
- 			var randomId = Math.floor(Math.random()*(long-points));	// numero al azar para el array de id
- 			var idRandom = toBeResolved[randomId];
- 			const quiz = model.getByIndex(idRandom);
+ 			var randomId = Math.floor(Math.random()*(Questions-points));	// numero al azar para el array de id
+ 			models.quiz.findById(toBeResolved[randomId])
 
- 			log(`${quiz.question}? `);								//Se lanza la pregunta
- 			rl.question('Introduce la respuesta: ', answer => {
-	 			 	// Respuesta del jugador
-	 			 var answerPlayer = answer.toLowerCase().trim();			// cambiar de mayusculas a minusculas y quitar blancos
-
-	 			 	// Respuesta correcta del test
-	 			 var goodAnswer = quiz.answer.toLowerCase().trim();				// cambiar de mayusculas a minusculas y quitar blancos
-
-	 			 if (answerPlayer === goodAnswer){
-	 			  	++points;
-	 			 	log(`Su respuesta es: CORRECTA. Lleva ${points} `);
-	 			 	if(points < long){
-	 			 		toBeResolved.splice(randomId, 1);		// eliminar 1 elemento desde la posición randomId
-	 			 		rl.prompt();
-	 					playOne();								// ejecución recursiva
+ 			.then(quiz => {
+ 				log(`La pregunta es : ${quiz.question}`); 			 	
+				return makeQuestion(rl, 'Introduzca la respuesta: ')
+ 					.then(a => {
+ 						if(a.toLowerCase().trim() === quiz.answer.toLowerCase()){	
+	 			  			++points;
+	 			 			log(`CORRECTA. Lleva ${points} `,'green');
+	 			 				if(points < Questions){
+	 			 					toBeResolved.splice(randomId, 1);
+	 			 					models.quiz.findById(randomId)
+	 			 			.then(() => {
+	 			 				rl.prompt();
+	 			 			})	
+	 			 			.then(() => {
+	 			 				playOne();
+	 			 			});	
+	 													// ejecución recursiva
+	 		 			} else {
+	 		 				log(' HAS ACERTADO TODAS LAS PREGUNTAS, ENHORABUENA!!');
+	 		 			}
 	 		 		} else {
-	 		 			log(' HAS ACERTADO TODAS LAS PREGUNTAS, ENHORABUENA!!');
-	 		 			rl.prompt();
-	 		 		}
-	 		 
-	 		 	} else {
-			 		log(`Su respuesta es: INCORRECTA`);
-	 			 	log(`Ha acertado: ${points} de ${long} preguntas`);
-	 			 	log('FIN DEL JUEGO', 'red');
-	 			 	rl.prompt();
-	 			}
- 			});
- 		}
- 		playOne();
-
+			 			log(`Su respuesta es: INCORRECTA`);
+	 			 		log(`Ha acertado: ${points} de ${long} preguntas`);
+	 			 		log('FIN DEL JUEGO', 'red');
+	 				}
+ 				})
+ 			.catch(error => {
+  				errorlog(error.massage);
+  			});
+  		})
+ 			.catch(error => {
+ 				errorlog(error.massage);
+ 		})
+  			.then(() => {
+  				rl.prompt();
+  		});	
  	};
+};
 
  /**
  * Borra el quiz del modelo.
