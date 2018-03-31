@@ -94,8 +94,8 @@ rl
   
 })
 .on('close', () => {
-  log(colorize(socket,'ADIOS!', 'green'));
-  log(colorize(socket,'Hasta la próxima!', 'green'));
+  log(socket,colorize('ADIOS!', 'green'));
+  log(socket,colorize('Hasta la próxima!', 'green'));
 })
 
 })

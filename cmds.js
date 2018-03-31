@@ -48,7 +48,7 @@ const Sequelize = require('sequelize');
  *
  * @param id Parametro con el indice a validar.
  */
- const validateId =(socket,id)  => {
+ const validateId =(id)  => {
 
  	return new Sequelize.Promise((resolve,reject) => {
  		if(typeof id === "undefined"){
@@ -98,7 +98,7 @@ const Sequelize = require('sequelize');
 *
 */
 
-const makeQuestion = (socket,rl,text) => {
+const makeQuestion = (rl,text) => {
 
 	return new Sequelize.Promise((resolve,reject)=> {
 		rl.question(colorize(text,'red'),answer => {
@@ -134,7 +134,7 @@ const makeQuestion = (socket,rl,text) => {
   	})
   	.catch(Sequelize.ValidationError, erro => {
   		errorlog(socket,'El quiz es erróneo: ');
-  		error.errors.forEach(({massage}) => errorlog(massage));
+  		error.errors.forEach(({massage}) => errorlog(socket,massage));
   	})
   	.catch(error => {
   		errorlog(socket,error.massage);
